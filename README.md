@@ -36,4 +36,4 @@ python sft.py
 
 The experiment freezes the base model and trains LoRA weights on the query and value projections. Loss applies to the JSON answer and its end token. The evaluator compares the original model and a fresh reload of the saved adapter on the same test set with greedy decoding. The report records the resolved base revision, training configuration, counts, and predictions.
 
-The [Benchmark workflow](../../actions) runs tests and a four-example LoRA smoke experiment on relevant pushes. To run the complete experiment, open the workflow, click **Run workflow**, and select `train_lora`. A successful LoRA job uploads the adapter and report as an artifact. The measured offline baseline results are checked in under [results/summary.json](results/summary.json).
+The [Benchmark workflow](../../actions) runs tests and the full LoRA experiment on relevant pushes. To run the complete experiment, open the workflow, click **Run workflow**, and select `train_lora`. A successful LoRA job uploads the adapter and report as an artifact. The measured offline baseline results are checked in under [results/summary.json](results/summary.json).
