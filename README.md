@@ -37,3 +37,14 @@ python sft.py
 The experiment freezes the base model and trains LoRA weights on the query and value projections. Loss applies to the JSON answer and its end token. The evaluator compares the original model and a fresh reload of the saved adapter on the same test set with greedy decoding. The report records the resolved base revision, training configuration, counts, and predictions.
 
 The [Benchmark workflow](../../actions) runs tests and the full LoRA experiment on relevant pushes. To run the complete experiment, open the workflow, click **Run workflow**, and select `train_lora`. A successful LoRA job uploads the adapter and report as an artifact. The measured offline baseline results are checked in under [results/summary.json](results/summary.json).
+
+### Measured Qwen results
+
+| Model | Valid JSON | Valid schema | Exact match |
+| --- | ---: | ---: | ---: |
+| Qwen2.5-Coder-0.5B-Instruct, greedy zero-shot | 0/72 | 0/72 | 0/72 |
+| Same base with the reloaded LoRA adapter | 72/72 | 72/72 | 72/72 |
+
+The evaluator parses the whole response as JSON. In this run, every unadapted response failed that strict check. The adapter matched the expanded rules baseline on this synthetic task. The test holds out wording and identifiers, while the schema and value ranges stay fixed.
+
+[Verified GitHub Actions run](https://github.com/jatinmallarapu/Requirements-To-Spec-Lab/actions/runs/43350432510) · [LoRA adapter and per-example report](https://github.com/jatinmallarapu/Requirements-To-Spec-Lab/actions/runs/43350432510/artifacts/14005195010) (GitHub sign-in required for download)
