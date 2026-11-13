@@ -1,0 +1,22 @@
+{
+  "split_sizes": {
+    "train": 144,
+    "dev": 24,
+    "test": 72
+  },
+  "numeric_rules": {
+    "json_valid": 72,
+    "schema_valid": 36,
+    "exact_match": 36
+  },
+  "rules_with_number_words": {
+    "json_valid": 72,
+    "schema_valid": 72,
+    "exact_match": 72
+  },
+  "learned": {
+    "json_valid": 72,
+    "schema_valid": 72,
+    "exact_match": 63
+  }
+}
