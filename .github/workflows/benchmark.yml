@@ -1,0 +1,55 @@
+name: Benchmark
+on:
+  push:
+    paths:
+      - "**.py"
+      - requirements.txt
+      - .github/workflows/benchmark.yml
+  workflow_dispatch:
+    inputs:
+      train_lora:
+        description: Run full Qwen LoRA training on a CPU runner
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m unittest -v
+      - run: python lab.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baseline
+          path: results/
+  lora:
+    if: github.event_name == 'push' || inputs.train_lora
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      OMP_NUM_THREADS: "2"
+      MKL_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+      - run: python -m pip install -r requirements.txt
+      - if: github.event_name == 'push'
+        run: python sft.py --epochs 1 --limit 4
+      - if: github.event_name == 'workflow_dispatch'
+        run: python sft.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qwen-lora-experiment
+          path: |
+            runs/qwen/adapter/
+            runs/qwen/report.json
